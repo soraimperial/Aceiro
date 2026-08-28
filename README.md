@@ -28,6 +28,8 @@ Your data is stored locally in `dados-<username>.json` files within the app fold
 
 ## First-time Setup
 
+In theory, running the .exe package should require no additional setup. However, if it fails:
+
 1. **Install Python:** If Python is not yet installed, download it from [python.org/downloads](https://www.python.org/downloads/). During installation, make sure to check the box **"Add python.exe to PATH"**.
 2. **Launch the App:** Double-click `IniciarAceiro.bat` inside the app folder using File Explorer. **Do not** type the filename into a Command Prompt window; always launch it via double-click.
 * *Note: The first launch takes a bit longer as it sets up the environment. Subsequent launches open almost instantly.*
@@ -48,14 +50,10 @@ The first time Aceiro opens on a specific computer, a **"Who are you?"** prompt 
 
 Each profile writes to its own `dados-<username>.json` file within the app folder (see [Where Data Is Stored](https://www.google.com/search?q=%23where-data-is-stored)). These files sync automatically when placed in a shared OneDrive or SharePoint folder. However, the local active profile selection is stored outside this folder, ensuring colleagues sharing a synced directory can select their own active profiles without overriding yours.
 
-> **Upgrading from an earlier version?**
-> If you used Aceiro before multi-user support was introduced, your legacy `dados.json` file is automatically imported into a profile named **"Eu"** (Me). No data is lost. You will see the "Who are you?" screen on your next launch — select **"Eu"** to pick up where you left off. You can later create a new profile with your actual name if desired.
-
----
 
 ## Share with Colleagues (Single Standalone Executable)
 
-To share Aceiro with colleagues who do not have Python installed or prefer not to manage batch files and scripts, you can build a single, portable executable (`Aceiro.exe`).
+To share Aceiro with colleagues who do not have Python installed or prefer not to manage batch files and scripts, you can build a single, portable executable (`Aceiro.exe`) yourself (instead of using the one I already give you, because why not.
 
 ### How to Build and Share
 
@@ -66,6 +64,8 @@ To share Aceiro with colleagues who do not have Python installed or prefer not t
 > **Important Windows Security Notice**
 > Because `Aceiro.exe` is an internal utility without a paid digital signature, Windows SmartScreen may display a blue warning screen (*"Windows protected your PC"*) on its first launch — especially if sent via email or web transfer. Advise colleagues to click **"More info"** and then select **"Run anyway"**.
 > Corporate antivirus tools may also flag unknown executables; if blocked, request IT to whitelist the file. Standalone executables may also take 1–2 seconds longer to launch than script-based setups.
+>
+> There's also the equivalent .sh version for Linux users.
 
 ---
 
