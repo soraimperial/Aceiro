@@ -14,11 +14,22 @@ This is just a simple application to run on your computer (Windows), featuring:
 * **Shift Start/End Stopwatch:** Track your daily work sessions effortlessly.
 * **Manual Task Entry:** Log tasks specifying Date, Type (*Current Work* / *Ad Hoc Work*), Task Name, and Hours.
 * **Automatic Shift Allocation:** Shift hours automatically cover tasks already logged for that day; remaining time is marked as "Unspecified".
+
+<img width="1398" height="822" alt="image" src="https://github.com/user-attachments/assets/621f8612-a0f2-4e0c-a8db-30d68ed525f5" />
+
 * **Monthly Report:** Includes a dropdown filter to view *All Months* (from the start of your logs) or an individual month (defaults to the current month), along with a *All / Current Work / Ad Hoc Work* toggle:
 * Selecting **Current Work** or **Ad Hoc Work** displays hours logged for that specific category and its percentage relative to total worked hours in the selected period (Expected Hours and Balance apply only to total hours, so they are hidden here).
 * Below the chart, a ranking highlights the tasks with the most logged hours.
 
+<img width="1380" height="772" alt="image" src="https://github.com/user-attachments/assets/64ba7fe7-9cfe-4ab0-a03d-8b6a2b6f27fa" />
+
+
+
 * **Expected vs. Worked Hours Comparison:** Expected hours are calculated at **7 hours per business day** with recorded activity (no need to specify contracted hours anywhere). Weekends and Portuguese national holidays are automatically detected from the calendar and excluded from expected hours. Next to the entry form, a **Day Classification** toggle (*Business Day / Overtime*) allows for exceptions — such as working on a holiday or taking a weekday off. Worked hours on these days count normally toward *Worked Hours*; the toggle only dictates whether they add to *Expected Hours*.
+
+<img width="1374" height="1065" alt="image" src="https://github.com/user-attachments/assets/60c8a538-cdcf-40c0-977b-c5fe9eb4b36a" />
+
+
 * **CSV Import/Export:** Compatible with Excel.
 * **Multi-user Support:** Manage multiple profiles within a single installation — useful for tracking a small team (2–3 people) from one place, with each person maintaining their own isolated data. See **Multi-user Support** below.
 
