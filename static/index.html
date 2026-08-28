@@ -1,0 +1,1100 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aceiro</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@500;600;700&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+  :root {
+    --bg: #f3f4ef;
+    --surface: #ffffff;
+    --surface-2: #eaeae1;
+    --border: #d9dbcd;
+    --ink: #20261f;
+    --ink-2: #5c6455;
+    --accent: #c1602c;
+    --accent-ink: #ffffff;
+    --accent-soft: #f3e1d4;
+    --outros: #0e7c9e;
+    --outros-soft: #dceef2;
+    --good: #2f7a4a;
+    --warning: #8a6a14;
+    --critical: #b23a2e;
+    --neutral-bar: #8f9784;
+    --radius: 10px;
+    --radius-sm: 6px;
+    --shadow: 0 1px 2px rgba(32,38,31,0.06), 0 6px 18px rgba(32,38,31,0.06);
+    --font-display: 'Zilla Slab', Georgia, 'Times New Roman', serif;
+    --font-body: 'Public Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1b211a;
+      --surface: #222920;
+      --surface-2: #2a3226;
+      --border: #3a4335;
+      --ink: #ecefe6;
+      --ink-2: #a7b09d;
+      --accent: #c96b3a;
+      --accent-ink: #211307;
+      --accent-soft: #3a2a1c;
+      --outros: #1c93b8;
+      --outros-soft: #16323b;
+      --good: #4f9868;
+      --warning: #d1a13c;
+      --critical: #d9584a;
+      --neutral-bar: #7c8570;
+    }
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-body);
+  }
+  body { padding: clamp(16px, 4vw, 48px) 16px 64px; }
+  .app {
+    max-width: 840px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  h1, h2, h3 { font-family: var(--font-display); font-weight: 600; margin: 0; text-wrap: balance; }
+  .app-header { display: flex; flex-direction: column; gap: 4px; padding: 4px 2px 8px; }
+  .brand { display: flex; align-items: baseline; gap: 10px; }
+  .brand-mark {
+    width: 12px; height: 12px; border-radius: 2px;
+    background: linear-gradient(135deg, var(--accent), var(--outros));
+    display: inline-block;
+    flex: none;
+  }
+  .app-header h1 { font-size: 1.9rem; letter-spacing: -0.01em; }
+  .tagline { margin: 0; color: var(--ink-2); font-size: 0.95rem; }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 20px 22px 24px;
+  }
+  .card h2 { font-size: 1.15rem; }
+  .card > h2 { margin-bottom: 14px; }
+  .card-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+  .card-head h2 { margin: 0; }
+
+  /* utilizadores */
+  .user-bar { padding: 12px 22px; display: flex; flex-direction: column; gap: 10px; }
+  .user-bar-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .user-bar-row label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-2); }
+  .new-user-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .new-user-row input { width: auto; min-width: 220px; }
+  .onboarding-card { display: flex; flex-direction: column; gap: 14px; }
+  .onboarding-list { display: flex; flex-wrap: wrap; gap: 8px; }
+
+  /* clock */
+  .clock-card { display: flex; align-items: center; justify-content: space-between; gap: 18px; flex-wrap: wrap; }
+  .clock-left { display: flex; align-items: center; gap: 16px; }
+  .clock-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--border); flex: none; }
+  .clock-dot.running { background: var(--good); box-shadow: 0 0 0 4px rgba(47,122,74,0.22); animation: pulse 2s ease-in-out infinite; }
+  @media (prefers-reduced-motion: reduce) { .clock-dot.running { animation: none; } }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.55; } }
+  .clock-info { display: flex; flex-direction: column; }
+  .clock-label { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-2); }
+  .clock-time { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1.6rem; font-weight: 600; }
+  .clock-sub { font-size: 0.82rem; color: var(--ink-2); margin-top: 2px; }
+
+  button { font-family: var(--font-body); cursor: pointer; }
+  .btn {
+    appearance: none; border: 1px solid var(--border); background: var(--surface-2); color: var(--ink);
+    padding: 9px 16px; border-radius: 999px; font-size: 0.9rem; font-weight: 600;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .btn:hover { border-color: var(--ink-2); }
+  .btn:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+    outline: 2px solid var(--accent); outline-offset: 2px;
+  }
+  .btn-primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+  .btn-primary:hover { filter: brightness(1.05); border-color: var(--accent); }
+  .btn-stop { background: var(--critical); border-color: var(--critical); color: #fff; }
+  .btn-ghost { background: transparent; border-color: transparent; color: var(--ink-2); padding: 6px 10px; font-size: 0.82rem; }
+  .btn-ghost:hover { color: var(--ink); background: var(--surface-2); }
+  .btn-sm { padding: 5px 11px; font-size: 0.78rem; border-radius: 8px; }
+  .btn[disabled] { opacity: 0.5; cursor: not-allowed; }
+
+  /* form */
+  .entry-form { display: grid; grid-template-columns: 1fr 1fr 2fr 0.8fr auto; gap: 10px; align-items: end; }
+  .field { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+  .field label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-2); }
+  input, select, textarea {
+    font-family: var(--font-body); font-size: 0.92rem; color: var(--ink);
+    background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm);
+    padding: 8px 10px; width: 100%;
+  }
+  input[type="number"] { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+  .entry-form .btn { height: 38px; }
+
+  .toolbar { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin: 16px 0 12px; }
+  .toolbar-group { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .select-inline { width: auto; }
+
+  .hint { font-size: 0.78rem; color: var(--ink-2); }
+  .import-msg { font-size: 0.82rem; }
+  .import-msg.ok { color: var(--good); }
+  .import-msg.err { color: var(--critical); }
+
+  .table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: var(--radius-sm); }
+  table { width: 100%; border-collapse: collapse; font-size: 0.88rem; min-width: 560px; }
+  thead th {
+    text-align: left; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-2);
+    padding: 9px 12px; background: var(--surface-2); border-bottom: 1px solid var(--border); white-space: nowrap;
+  }
+  tbody td { padding: 8px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover { background: rgba(0,0,0,0.03); }
+  td.num, th.num { text-align: right; font-family: var(--font-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  td.actions { text-align: right; white-space: nowrap; }
+  .pill { display: inline-flex; align-items: center; gap: 5px; font-size: 0.76rem; font-weight: 600; padding: 3px 9px; border-radius: 999px; }
+  .pill::before { content: ""; width: 6px; height: 6px; border-radius: 50%; }
+  .pill-ncr { background: var(--accent-soft); color: var(--accent); }
+  .pill-ncr::before { background: var(--accent); }
+  .pill-outros { background: var(--outros-soft); color: var(--outros); }
+  .pill-outros::before { background: var(--outros); }
+  .src-tag { font-size: 0.72rem; color: var(--ink-2); }
+  .empty-row td { text-align: center; color: var(--ink-2); padding: 22px 12px; }
+
+  /* report */
+  .segmented { display: inline-flex; background: var(--surface-2); border-radius: 999px; padding: 3px; gap: 2px; }
+  .segmented button {
+    border: none; background: transparent; color: var(--ink-2); font-size: 0.82rem; font-weight: 600;
+    padding: 7px 14px; border-radius: 999px;
+  }
+  .segmented button.active { background: var(--surface); color: var(--ink); box-shadow: 0 1px 2px rgba(0,0,0,0.08); }
+  .chart-wrap { overflow-x: auto; padding-bottom: 4px; }
+  .chart-svg { display: block; min-width: 100%; }
+  .chart-empty { color: var(--ink-2); font-size: 0.9rem; padding: 30px 4px; text-align: center; }
+  .bar { fill: var(--neutral-bar); cursor: pointer; }
+  .bar.mode-ncr { fill: var(--accent); }
+  .bar.mode-outros { fill: var(--outros); }
+  .bar:hover, .bar:focus-visible { filter: brightness(1.08); outline: none; }
+  .axis-label { fill: var(--ink-2); font-family: var(--font-mono); font-size: 10.5px; }
+  .gridline { stroke: var(--border); stroke-width: 1; }
+  #chartTooltip {
+    position: fixed; pointer-events: none; background: var(--ink); color: var(--bg);
+    font-size: 0.78rem; font-family: var(--font-mono); padding: 5px 9px; border-radius: 6px;
+    transform: translate(-50%, -130%); white-space: nowrap; z-index: 40; opacity: 0; transition: opacity 0.08s ease;
+  }
+  #chartTooltip.show { opacity: 1; }
+
+  .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; margin: 14px 0 4px; }
+  .stat-tile { background: var(--surface-2); border-radius: var(--radius-sm); padding: 10px 12px; display: flex; flex-direction: column; gap: 3px; }
+  .stat-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-2); }
+  .stat-value { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1.15rem; font-weight: 600; }
+  .stat-value.stat-good { color: var(--good); }
+  .stat-value.stat-critical { color: var(--critical); }
+  .stats-hint { margin: 6px 0 2px; }
+  .daytype-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; background: var(--surface-2); border-radius: var(--radius-sm); padding: 8px 12px; margin: 4px 0 16px; }
+  .daytype-label { font-size: 0.78rem; color: var(--ink-2); }
+  .daytype-hint { display: inline-flex; align-items: center; gap: 6px; }
+  tr.auto-row { font-style: italic; color: var(--ink-2); }
+  tr.auto-row .pill { opacity: 0.85; }
+  @media (max-width: 640px) {
+    .stats-row { grid-template-columns: 1fr 1fr; }
+  }
+
+  .ranking-head { display: flex; align-items: baseline; justify-content: space-between; margin: 22px 0 10px; }
+  .ranking-head h3 { font-size: 0.95rem; }
+  .ranking-total { font-size: 0.82rem; color: var(--ink-2); font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+  .ranking-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+  .ranking-item { display: grid; grid-template-columns: 1fr auto; gap: 2px 12px; align-items: center; }
+  .ranking-name { font-size: 0.88rem; font-weight: 600; }
+  .ranking-value { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 0.86rem; text-align: right; }
+  .ranking-meta { font-size: 0.74rem; color: var(--ink-2); grid-column: 1 / -1; }
+  .ranking-track { grid-column: 1 / -1; height: 6px; background: var(--surface-2); border-radius: 999px; overflow: hidden; }
+  .ranking-fill { height: 100%; border-radius: 999px; background: var(--neutral-bar); }
+  .ranking-fill.mode-ncr { background: var(--accent); }
+  .ranking-fill.mode-outros { background: var(--outros); }
+  .ranking-empty { color: var(--ink-2); font-size: 0.88rem; padding: 10px 0; }
+
+  .app-footer { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; padding: 4px 2px; font-size: 0.78rem; color: var(--ink-2); }
+  .sync-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--good); display: inline-block; margin-right: 6px; }
+  .sync-dot.off { background: var(--ink-2); }
+  .sync-dot.busy { background: var(--warning); }
+  .sync-dot.err { background: var(--critical); }
+
+  @media (max-width: 640px) {
+    .entry-form { grid-template-columns: 1fr 1fr; }
+    .entry-form .btn { grid-column: 1 / -1; }
+    table { min-width: 480px; }
+  }
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <p class="hint" style="padding: 40px 2px;">A carregar…</p>
+</div>
+<div id="chartTooltip"></div>
+<script>
+(function () {
+  "use strict";
+
+  /* ---------- state ---------- */
+  var EXPECTED_HOURS_PER_DAY = 7; // horas contratadas por dia útil (fixo)
+  var TYPE_LABEL = { ncr: "Trabalho Corrente", outros: "Trabalho Ad Hoc" };
+  function normalizeTypeCode(raw) {
+    var t = String(raw == null ? "" : raw).trim().toLowerCase();
+    if (t === "ncr" || t.indexOf("corrente") > -1) return "ncr";
+    return "outros";
+  }
+  var STATE = { version: 3, entries: [], shifts: [], clock: null, settings: { dayTypeOverrides: {} } };
+  var USERS = []; /* [{ name, slug }] */
+  var CURRENT_USER = null; /* slug */
+  var newUserOpen = false;
+
+  var syncStatus = "checking"; /* checking | synced | busy | error */
+  var filterMode = "todos"; /* todos | ncr | outros */
+  var logMonthFilter = monthKey(todayISO());
+  var reportMonthFilter = monthKey(todayISO()); /* "todos" | "AAAA-MM" */
+  var clockTimer = null;
+  var importMessage = null; /* { text, ok } */
+  var exportMessage = null;
+
+  /* ---------- helpers ---------- */
+  function uid() {
+    if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+    return "id" + Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+  }
+  function escapeHtml(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+  function fmtHours(n) {
+    n = Math.round((n + Number.EPSILON) * 100) / 100;
+    return n.toLocaleString("pt-PT", { minimumFractionDigits: n % 1 === 0 ? 0 : 1, maximumFractionDigits: 2 });
+  }
+  function todayISO() {
+    var d = new Date();
+    return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+  }
+  function monthKey(dateStr) { return (dateStr || "").slice(0, 7); }
+  function fmtMonthLabel(ym) {
+    var parts = ym.split("-");
+    if (parts.length < 2) return ym;
+    var d = new Date(Number(parts[0]), Number(parts[1]) - 1, 1);
+    var label = d.toLocaleDateString("pt-PT", { month: "short", year: "2-digit" });
+    return label.replace(".", "");
+  }
+  function fmtDatePT(dateStr) {
+    var parts = (dateStr || "").split("-");
+    if (parts.length !== 3) return dateStr || "";
+    return parts[2] + "/" + parts[1] + "/" + parts[0].slice(2);
+  }
+  function fmtDuration(ms) {
+    var totalSec = Math.max(0, Math.floor(ms / 1000));
+    var h = Math.floor(totalSec / 3600);
+    var m = Math.floor((totalSec % 3600) / 60);
+    var s = totalSec % 60;
+    return String(h).padStart(2, "0") + ":" + String(m).padStart(2, "0") + ":" + String(s).padStart(2, "0");
+  }
+
+  /* ---------- turno vs. tarefas ---------- */
+  function dayTaskHours(date) {
+    return STATE.entries.filter(function (e) { return e.date === date; })
+      .reduce(function (s, e) { return s + e.hours; }, 0);
+  }
+  function dayShiftHours(date) {
+    return STATE.shifts.filter(function (s) { return s.date === date; })
+      .reduce(function (s, sh) { return s + sh.hours; }, 0);
+  }
+  function dayUnspecified(date) {
+    return Math.max(0, Math.round((dayShiftHours(date) - dayTaskHours(date)) * 100) / 100);
+  }
+  function allDates() {
+    var set = {};
+    STATE.entries.forEach(function (e) { set[e.date] = true; });
+    STATE.shifts.forEach(function (s) { set[s.date] = true; });
+    return Object.keys(set).sort();
+  }
+  function getEffectiveEntries() {
+    var extra = [];
+    allDates().forEach(function (date) {
+      var h = dayUnspecified(date);
+      if (h > 0.004) {
+        extra.push({ id: "auto-" + date, date: date, type: "outros", task: "Não especificado", hours: h, source: "auto" });
+      }
+    });
+    return STATE.entries.concat(extra);
+  }
+  function toISO(d) {
+    return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+  }
+
+  /* ---------- calendário: fins de semana e feriados nacionais (Portugal) ---------- */
+  // Domingo de Páscoa (algoritmo de Meeus/Jones/Butcher) — base para a
+  // Sexta-feira Santa e o Corpo de Deus, que são móveis.
+  function easterSunday(year) {
+    var a = year % 19, b = Math.floor(year / 100), c = year % 100;
+    var d = Math.floor(b / 4), e = b % 4, f = Math.floor((b + 8) / 25);
+    var g = Math.floor((b - f + 1) / 3);
+    var h = (19 * a + b - d - g + 15) % 30;
+    var i = Math.floor(c / 4), k = c % 4;
+    var l = (32 + 2 * e + 2 * i - h - k) % 7;
+    var m = Math.floor((a + 11 * h + 22 * l) / 451);
+    var month = Math.floor((h + l - 7 * m + 114) / 31);
+    var day = ((h + l - 7 * m + 114) % 31) + 1;
+    return new Date(year, month - 1, day);
+  }
+  var FIXED_HOLIDAYS_MD = ["1-1", "4-25", "5-1", "6-10", "8-15", "10-5", "11-1", "12-1", "12-8", "12-25"];
+  function nationalHolidayName(dateStr) {
+    var d = new Date(dateStr + "T00:00:00");
+    var md = (d.getMonth() + 1) + "-" + d.getDate();
+    var NAMES = { "1-1": "Ano Novo", "4-25": "Dia da Liberdade", "5-1": "Dia do Trabalhador", "6-10": "Dia de Portugal", "8-15": "Assunção de Nossa Senhora", "10-5": "Implantação da República", "11-1": "Todos os Santos", "12-1": "Restauração da Independência", "12-8": "Imaculada Conceição", "12-25": "Natal" };
+    if (NAMES[md]) return NAMES[md];
+    var easter = easterSunday(d.getFullYear());
+    var goodFriday = new Date(easter); goodFriday.setDate(goodFriday.getDate() - 2);
+    if (toISO(d) === toISO(goodFriday)) return "Sexta-feira Santa";
+    var corpusChristi = new Date(easter); corpusChristi.setDate(corpusChristi.getDate() + 60);
+    if (toISO(d) === toISO(corpusChristi)) return "Corpo de Deus";
+    return null;
+  }
+  function defaultDayType(dateStr) {
+    var d = new Date(dateStr + "T00:00:00");
+    var dow = d.getDay();
+    if (dow === 0 || dow === 6) return "extra";
+    if (nationalHolidayName(dateStr)) return "extra";
+    return "util";
+  }
+  function dayTypeReason(dateStr) {
+    var d = new Date(dateStr + "T00:00:00");
+    var dow = d.getDay();
+    if (dow === 0 || dow === 6) return "fim de semana";
+    var name = nationalHolidayName(dateStr);
+    if (name) return "feriado: " + name;
+    return "dia útil";
+  }
+  function dayType(dateStr) {
+    var overrides = STATE.settings.dayTypeOverrides || {};
+    if (overrides[dateStr]) return overrides[dateStr];
+    return defaultDayType(dateStr);
+  }
+  function isOverridden(dateStr) {
+    return !!(STATE.settings.dayTypeOverrides && STATE.settings.dayTypeOverrides[dateStr]);
+  }
+
+  function overallStats(scope) {
+    var dates = allDates().filter(function (d) { return scope === "todos" || monthKey(d) === scope; });
+    if (!dates.length) return { expected: 0, worked: 0, saldo: 0, hasData: false };
+    var expected = dates.reduce(function (s, d) { return s + (dayType(d) === "util" ? EXPECTED_HOURS_PER_DAY : 0); }, 0);
+    var worked = dates.reduce(function (s, d) { return s + dayTaskHours(d) + dayUnspecified(d); }, 0);
+    return { expected: expected, worked: worked, saldo: worked - expected, hasData: true, from: dates[0], to: dates[dates.length - 1] };
+  }
+  function typeBreakdown(scope) {
+    var totals = { ncr: 0, outros: 0 };
+    getEffectiveEntries().forEach(function (e) {
+      if (scope !== "todos" && monthKey(e.date) !== scope) return;
+      var key = e.type.toLowerCase();
+      totals[key] = (totals[key] || 0) + e.hours;
+    });
+    totals.total = totals.ncr + totals.outros;
+    return totals;
+  }
+
+  /* ---------- persistência (via servidor local) ---------- */
+  function applyState(data) {
+    STATE = data;
+    if (!STATE.entries) STATE.entries = [];
+    if (!STATE.shifts) STATE.shifts = [];
+    if (!STATE.settings) STATE.settings = { dayTypeOverrides: {} };
+    if (!STATE.settings.dayTypeOverrides) STATE.settings.dayTypeOverrides = {};
+    // Normaliza registos antigos (guardados como "NCR"/"Outros") para os
+    // códigos internos atuais — só muda em memória, não reescreve o ficheiro.
+    STATE.entries.forEach(function (e) { e.type = normalizeTypeCode(e.type); });
+  }
+
+  function boot() {
+    fetch("/api/users").then(function (r) {
+      if (!r.ok) throw new Error("bad status");
+      return r.json();
+    }).then(function (u) {
+      USERS = u.users || [];
+      CURRENT_USER = u.current || null;
+      if (!CURRENT_USER) {
+        // Nenhum utilizador escolhido ainda neste computador — mostra o
+        // ecrã de escolha/criação em vez de tentar carregar dados.
+        syncStatus = "synced";
+        renderApp();
+        return;
+      }
+      return fetch("/api/state").then(function (r) {
+        if (!r.ok) throw new Error("bad status");
+        return r.json();
+      }).then(function (data) {
+        applyState(data);
+        syncStatus = "synced";
+        renderApp();
+      });
+    }).catch(function () {
+      syncStatus = "error";
+      renderApp();
+    });
+  }
+
+  function reloadStateForCurrentUser() {
+    filterMode = "todos";
+    logMonthFilter = monthKey(todayISO());
+    reportMonthFilter = monthKey(todayISO());
+    fetch("/api/state").then(function (r) {
+      if (!r.ok) throw new Error("bad status");
+      return r.json();
+    }).then(function (data) {
+      applyState(data);
+      syncStatus = "synced";
+      renderApp();
+    }).catch(function () {
+      syncStatus = "error";
+      renderApp();
+    });
+  }
+
+  function switchUser(slug) {
+    if (!slug || slug === CURRENT_USER) return;
+    fetch("/api/users/select", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ slug: slug })
+    }).then(function (r) {
+      if (!r.ok) throw new Error("bad status");
+      return r.json();
+    }).then(function (u) {
+      USERS = u.users || [];
+      CURRENT_USER = u.current;
+      reloadStateForCurrentUser();
+    }).catch(function () {
+      syncStatus = "error";
+      renderApp();
+    });
+  }
+
+  function createUser(name) {
+    fetch("/api/users", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: name })
+    }).then(function (r) {
+      if (!r.ok) throw new Error("bad status");
+      return r.json();
+    }).then(function (u) {
+      USERS = u.users || [];
+      CURRENT_USER = u.current;
+      newUserOpen = false;
+      reloadStateForCurrentUser();
+    }).catch(function () {
+      syncStatus = "error";
+      renderApp();
+    });
+  }
+
+  function persist() {
+    renderApp();
+    syncStatus = "busy";
+    renderFooter();
+    fetch("/api/state", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(STATE)
+    }).then(function (r) {
+      if (!r.ok) throw new Error("bad status");
+      return r.json();
+    }).then(function () {
+      syncStatus = "synced";
+      renderFooter();
+    }).catch(function () {
+      syncStatus = "error";
+      renderFooter();
+    });
+  }
+
+  /* ---------- data ops ---------- */
+  function addEntry(entry) { STATE.entries.push(entry); persist(); }
+  function removeEntry(id) {
+    STATE.entries = STATE.entries.filter(function (e) { return e.id !== id; });
+    persist();
+  }
+
+  /* ---------- clock ---------- */
+  function startClock() {
+    STATE.clock = { startedAt: new Date().toISOString() };
+    persist();
+    tickClock();
+  }
+  function stopClock() {
+    if (!STATE.clock) return;
+    var started = new Date(STATE.clock.startedAt);
+    var endedAt = new Date();
+    var ms = endedAt.getTime() - started.getTime();
+    var hours = Math.round((ms / 3600000) * 100) / 100;
+    if (hours > 0) {
+      STATE.shifts.push({
+        id: uid(),
+        date: todayISO(),
+        startedAt: STATE.clock.startedAt,
+        endedAt: endedAt.toISOString(),
+        hours: hours
+      });
+    }
+    STATE.clock = null;
+    persist();
+  }
+  function tickClock() {
+    if (clockTimer) clearInterval(clockTimer);
+    if (!STATE.clock) return;
+    clockTimer = setInterval(function () {
+      var el = document.getElementById("clockTime");
+      if (!el || !STATE.clock) { clearInterval(clockTimer); return; }
+      el.textContent = fmtDuration(Date.now() - new Date(STATE.clock.startedAt).getTime());
+    }, 1000);
+  }
+
+  /* ---------- CSV import/export ---------- */
+  function parseCSV(text) {
+    var lines = text.split(/\r?\n/).map(function (l) { return l.trim(); }).filter(Boolean);
+    if (!lines.length) return { ok: false, error: "Cole primeiro o texto do CSV." };
+    var semiCount = (lines[0].match(/;/g) || []).length;
+    var commaCount = (lines[0].match(/,/g) || []).length;
+    var delim = semiCount > commaCount ? ";" : ",";
+    var header = lines[0].split(delim).map(function (h) { return h.trim().toLowerCase(); });
+    var idx = { date: -1, type: -1, task: -1, hours: -1 };
+    header.forEach(function (h, i) {
+      if (idx.date === -1 && /data|dia/.test(h)) idx.date = i;
+      if (idx.type === -1 && /tipo/.test(h)) idx.type = i;
+      if (idx.task === -1 && /tarefa/.test(h)) idx.task = i;
+      if (idx.hours === -1 && /hora/.test(h)) idx.hours = i;
+    });
+    if (idx.date === -1 || idx.hours === -1) {
+      return { ok: false, error: "Não encontrei as colunas Data e Horas no cabeçalho." };
+    }
+    var out = [];
+    var skipped = 0;
+    for (var i = 1; i < lines.length; i++) {
+      var cols = lines[i].split(delim);
+      var dateRaw = (cols[idx.date] || "").trim();
+      var hoursRaw = (cols[idx.hours] || "").trim().replace(",", ".");
+      var hours = parseFloat(hoursRaw);
+      var iso = null;
+      if (/^\d{4}-\d{2}-\d{2}$/.test(dateRaw)) iso = dateRaw;
+      else if (/^\d{2}\/\d{2}\/\d{4}$/.test(dateRaw)) {
+        var p = dateRaw.split("/");
+        iso = p[2] + "-" + p[1] + "-" + p[0];
+      }
+      if (!iso || isNaN(hours)) { skipped++; continue; }
+      var typeRaw = idx.type > -1 ? (cols[idx.type] || "").trim() : "outros";
+      var type = normalizeTypeCode(typeRaw);
+      var task = idx.task > -1 ? (cols[idx.task] || "").trim() : "Importado";
+      out.push({ id: uid(), date: iso, type: type, task: task || "Importado", hours: hours, source: "import", createdAt: new Date().toISOString() });
+    }
+    if (!out.length) return { ok: false, error: "Nenhuma linha válida encontrada (confirme o formato AAAA-MM-DD para a data)." };
+    return { ok: true, entries: out, skipped: skipped };
+  }
+
+  function exportCSV() {
+    exportMessage = { text: "A exportar…", ok: true };
+    renderApp();
+    fetch("/api/export", { method: "POST" }).then(function (r) {
+      if (!r.ok) throw new Error("bad status");
+      return r.json();
+    }).then(function (res) {
+      exportMessage = { text: "Exportado para " + res.path, ok: true };
+      renderApp();
+    }).catch(function () {
+      exportMessage = { text: "Falha ao exportar.", ok: false };
+      renderApp();
+    });
+  }
+
+  /* ---------- rendering ---------- */
+  function monthsPresent() {
+    var set = {};
+    STATE.entries.forEach(function (e) { set[monthKey(e.date)] = true; });
+    STATE.shifts.forEach(function (s) { set[monthKey(s.date)] = true; });
+    return Object.keys(set).sort();
+  }
+  function monthSelectOptions(current) {
+    var set = {};
+    monthsPresent().forEach(function (m) { set[m] = true; });
+    if (current !== "todos") set[current] = true; // garante que o mês selecionado aparece, mesmo sem registos
+    var list = Object.keys(set).sort();
+    return '<option value="todos"' + (current === "todos" ? " selected" : "") + '>Todos os meses</option>' +
+      list.slice().reverse().map(function (m) {
+        return '<option value="' + m + '"' + (current === m ? " selected" : "") + '>' + fmtMonthLabel(m) + '</option>';
+      }).join("");
+  }
+
+  function renderApp() {
+    var root = document.getElementById("app");
+    if (!root) return;
+    if (!CURRENT_USER) {
+      root.innerHTML = renderHeader() + renderOnboarding();
+      bindEvents();
+      return;
+    }
+    root.innerHTML =
+      renderHeader() +
+      renderUserBar() +
+      renderClockCard() +
+      renderLogCard() +
+      renderReportCard() +
+      renderFooterHtml();
+    bindEvents();
+    tickClock();
+  }
+
+  function renderHeader() {
+    return '<header class="app-header">' +
+      '<div class="brand"><span class="brand-mark" aria-hidden="true"></span><h1>Aceiro</h1></div>' +
+      '<p class="tagline">Registo pessoal de horas de trabalho — cronómetro, tarefas e relatório mensal.</p>' +
+      '</header>';
+  }
+
+  function renderOnboarding() {
+    var existing = USERS.length
+      ? '<div class="onboarding-list">' + USERS.map(function (u) {
+          return '<button class="btn" type="button" data-pick-user="' + u.slug + '">' + escapeHtml(u.name) + '</button>';
+        }).join("") + '</div>'
+      : '<p class="hint">Ainda não há nenhum utilizador criado nesta pasta.</p>';
+    return '<section class="card onboarding-card">' +
+      '<h2>Quem é você?</h2>' +
+      '<p class="hint">' + (USERS.length ? "Escolha o seu nome na lista, ou crie um novo utilizador. " : "Crie o seu utilizador para começar. ") +
+      'Esta escolha fica guardada só neste computador — não afeta o que os seus colegas veem no deles, mesmo partilhando esta pasta.</p>' +
+      existing +
+      '<div class="new-user-row">' +
+      '<input type="text" id="onboardUserName" placeholder="O seu nome">' +
+      '<button class="btn btn-primary" id="onboardUserConfirm" type="button">Criar / Entrar</button>' +
+      '</div>' +
+      '</section>';
+  }
+
+  function renderUserBar() {
+    var options = USERS.map(function (u) {
+      return '<option value="' + u.slug + '"' + (u.slug === CURRENT_USER ? " selected" : "") + '>' + escapeHtml(u.name) + '</option>';
+    }).join("");
+    return '<section class="card user-bar">' +
+      '<div class="user-bar-row">' +
+      '<label class="hint" for="userSelect">Utilizador</label>' +
+      '<select id="userSelect" class="select-inline">' + options + '</select>' +
+      '<button class="btn btn-ghost btn-sm" id="newUserToggle" type="button">+ Novo utilizador</button>' +
+      '</div>' +
+      (newUserOpen
+        ? '<div class="new-user-row">' +
+          '<input type="text" id="newUserName" placeholder="Nome do colega ou perfil">' +
+          '<button class="btn btn-sm btn-primary" id="newUserConfirm" type="button">Criar</button>' +
+          '<button class="btn btn-ghost btn-sm" id="newUserCancel" type="button">Cancelar</button>' +
+          '</div>'
+        : '') +
+      '</section>';
+  }
+
+  function renderClockCard() {
+    var running = !!STATE.clock;
+    var elapsed = running ? fmtDuration(Date.now() - new Date(STATE.clock.startedAt).getTime()) : "00:00:00";
+    return '<section class="card clock-card">' +
+      '<div class="clock-left">' +
+      '<span class="clock-dot' + (running ? ' running' : '') + '" aria-hidden="true"></span>' +
+      '<div class="clock-info">' +
+      '<span class="clock-label">' + (running ? "Turno em curso" : "Cronómetro") + '</span>' +
+      '<span class="clock-time" id="clockTime">' + elapsed + '</span>' +
+      (running ? '<span class="clock-sub">Início às ' + new Date(STATE.clock.startedAt).toLocaleTimeString("pt-PT", { hour: "2-digit", minute: "2-digit" }) + '</span>' : '<span class="clock-sub">As horas do turno cobrem primeiro as tarefas já registadas nesse dia — o resto fica como "Não especificado"</span>') +
+      '</div></div>' +
+      (running
+        ? '<button class="btn btn-stop" id="clockStop">Terminar turno</button>'
+        : '<button class="btn btn-primary" id="clockStart">Iniciar turno</button>') +
+      '</section>';
+  }
+
+  function renderLogCard() {
+    var monthOptions = monthSelectOptions(logMonthFilter);
+    var rows = getEffectiveEntries().filter(function (e) {
+      return logMonthFilter === "todos" || monthKey(e.date) === logMonthFilter;
+    }).sort(function (a, b) {
+      if (a.date === b.date) return (b.createdAt || "").localeCompare(a.createdAt || "");
+      return b.date.localeCompare(a.date);
+    });
+    var bodyRows = rows.length
+      ? rows.map(renderEntryRow).join("")
+      : '<tr class="empty-row"><td colspan="6">Sem registos' + (logMonthFilter !== "todos" ? " neste mês" : "") + '. Adicione uma linha acima ou importe o seu Excel.</td></tr>';
+    return '<section class="card log-card">' +
+      '<h2>Registo manual</h2>' +
+      '<form class="entry-form" id="entryForm">' +
+      '<div class="field"><label for="fDate">Data</label><input type="date" id="fDate" required value="' + todayISO() + '"></div>' +
+      '<div class="field"><label for="fType">Tipo</label><select id="fType"><option value="ncr">' + TYPE_LABEL.ncr + '</option><option value="outros" selected>' + TYPE_LABEL.outros + '</option></select></div>' +
+      '<div class="field"><label for="fTask">Tarefa</label><input type="text" id="fTask" placeholder="Ex.: CIPO, Reunião..." required></div>' +
+      '<div class="field"><label for="fHours">Horas</label><input type="number" id="fHours" step="0.25" min="0" placeholder="0" required></div>' +
+      '<button type="submit" class="btn btn-primary">Adicionar</button>' +
+      '</form>' +
+      renderDayTypeRow(todayISO()) +
+      '<div class="toolbar">' +
+      '<div class="toolbar-group"><label class="hint" for="logMonth">Mostrar:</label><select id="logMonth" class="select-inline">' + monthOptions + '</select></div>' +
+      '<div class="toolbar-group">' +
+      '<button class="btn btn-sm" id="pickCsv" type="button">Importar CSV</button>' +
+      '<input type="file" id="csvFile" accept=".csv,text/csv" style="display:none">' +
+      '<button class="btn btn-sm" id="exportCsv" type="button">Exportar CSV</button>' +
+      (exportMessage ? '<span class="import-msg ' + (exportMessage.ok ? "ok" : "err") + '">' + escapeHtml(exportMessage.text) + '</span>' : '') +
+      (importMessage ? '<span class="import-msg ' + (importMessage.ok ? "ok" : "err") + '">' + escapeHtml(importMessage.text) + '</span>' : '') +
+      '</div></div>' +
+      '<div class="table-wrap"><table><thead><tr>' +
+      '<th>Data</th><th>Tipo</th><th>Tarefa</th><th class="num">Horas</th><th>Origem</th><th></th>' +
+      '</tr></thead><tbody>' + bodyRows + '</tbody></table></div>' +
+      '</section>';
+  }
+
+  function renderEntryRow(e) {
+    var isAuto = e.source === "auto";
+    var srcLabel = isAuto ? "Calculado" : e.source === "import" ? "Importado" : "Manual";
+    return '<tr data-id="' + e.id + '"' + (isAuto ? ' class="auto-row"' : '') + '>' +
+      '<td>' + fmtDatePT(e.date) + '</td>' +
+      '<td><span class="pill ' + (e.type === "ncr" ? "pill-ncr" : "pill-outros") + '">' + escapeHtml(TYPE_LABEL[e.type] || e.type) + '</span></td>' +
+      '<td>' + escapeHtml(e.task) + '</td>' +
+      '<td class="num">' + fmtHours(e.hours) + '</td>' +
+      '<td><span class="src-tag">' + srcLabel + '</span></td>' +
+      '<td class="actions">' + (isAuto ? '—' : '<button class="btn btn-ghost btn-sm" data-action="delete" data-id="' + e.id + '">Remover</button>') + '</td>' +
+      '</tr>';
+  }
+
+  function computeMonthly(mode, scope) {
+    var totals = {};
+    getEffectiveEntries().forEach(function (e) {
+      if (mode !== "todos" && e.type.toLowerCase() !== mode) return;
+      if (scope !== "todos" && monthKey(e.date) !== scope) return;
+      var m = monthKey(e.date);
+      totals[m] = (totals[m] || 0) + e.hours;
+    });
+    return Object.keys(totals).sort().map(function (m) { return { month: m, hours: totals[m] }; });
+  }
+
+  function computeRanking(mode, scope) {
+    var totals = {};
+    getEffectiveEntries().forEach(function (e) {
+      if (mode !== "todos" && e.type.toLowerCase() !== mode) return;
+      if (scope !== "todos" && monthKey(e.date) !== scope) return;
+      totals[e.task] = (totals[e.task] || 0) + e.hours;
+    });
+    var list = Object.keys(totals).map(function (t) { return { task: t, hours: totals[t] }; });
+    list.sort(function (a, b) { return b.hours - a.hours; });
+    return list;
+  }
+
+  function renderReportCard() {
+    var monthly = computeMonthly(filterMode, reportMonthFilter);
+    var ranking = computeRanking(filterMode, reportMonthFilter);
+    var grandTotal = ranking.reduce(function (s, r) { return s + r.hours; }, 0);
+    var scopeOptions = monthSelectOptions(reportMonthFilter);
+    return '<section class="card report-card">' +
+      '<div class="card-head"><h2>Relatório mensal</h2>' +
+      '<div class="segmented" id="filterToggle">' +
+      segBtn("todos", "Todos") + segBtn("ncr", TYPE_LABEL.ncr) + segBtn("outros", TYPE_LABEL.outros) +
+      '</div></div>' +
+      '<div class="toolbar" style="margin-top:-6px;"><div class="toolbar-group"><label class="hint" for="reportMonth">Mostrar:</label><select id="reportMonth" class="select-inline">' + scopeOptions + '</select></div></div>' +
+      renderExpectedStats() +
+      '<div class="chart-wrap">' + renderChart(monthly) + '</div>' +
+      '<div class="ranking-head"><h3>Tarefas com mais horas</h3><span class="ranking-total">Total: ' + fmtHours(grandTotal) + ' h</span></div>' +
+      renderRanking(ranking, grandTotal) +
+      '</section>';
+  }
+
+  function renderExpectedStats() {
+    if (filterMode === "todos") {
+      var s = overallStats(reportMonthFilter);
+      var saldoClass = s.saldo >= 0 ? "good" : "critical";
+      var saldoLabel = s.saldo >= 0 ? "+" + fmtHours(s.saldo) : "−" + fmtHours(Math.abs(s.saldo));
+      return '<div class="stats-row">' +
+        '<div class="stat-tile"><span class="stat-label">Expectáveis</span><span class="stat-value">' + fmtHours(s.expected) + ' h</span></div>' +
+        '<div class="stat-tile"><span class="stat-label">Trabalhadas</span><span class="stat-value">' + fmtHours(s.worked) + ' h</span></div>' +
+        '<div class="stat-tile"><span class="stat-label">Saldo</span><span class="stat-value stat-' + saldoClass + '">' + saldoLabel + ' h</span></div>' +
+        '</div>';
+    }
+    var b = typeBreakdown(reportMonthFilter);
+    var typed = filterMode === "ncr" ? b.ncr : b.outros;
+    var pct = b.total ? Math.round((typed / b.total) * 100) : 0;
+    var typeLabel = TYPE_LABEL[filterMode] || filterMode;
+    return '<div class="stats-row">' +
+      '<div class="stat-tile"><span class="stat-label">Trabalhadas (' + typeLabel + ')</span><span class="stat-value">' + fmtHours(typed) + ' h</span></div>' +
+      '<div class="stat-tile"><span class="stat-label">% do total trabalhado</span><span class="stat-value">' + pct + '%</span></div>' +
+      '</div>';
+  }
+
+  function renderDayTypeRow(date) {
+    var t = dayType(date);
+    var overridden = isOverridden(date);
+    return '<div class="daytype-row" id="daytypeRow" data-date="' + date + '">' +
+      '<span class="daytype-label">Classificação do dia (' + fmtDatePT(date) + ')</span>' +
+      '<div class="segmented" id="daytypeToggle">' +
+      '<button type="button" data-daytype="util" class="' + (t === "util" ? "active" : "") + '">Dia útil</button>' +
+      '<button type="button" data-daytype="extra" class="' + (t === "extra" ? "active" : "") + '">Extraordinário</button>' +
+      '</div>' +
+      '<span class="hint daytype-hint">' +
+      (overridden
+        ? 'Marcado manualmente <button type="button" class="btn-ghost btn-sm" id="daytypeReset">repor automático</button>'
+        : "Automático: " + dayTypeReason(date)) +
+      '</span></div>';
+  }
+
+  function segBtn(mode, label) {
+    return '<button data-mode="' + mode + '" class="' + (filterMode === mode ? "active" : "") + '">' + label + '</button>';
+  }
+
+  function renderChart(monthly) {
+    if (!monthly.length) return '<p class="chart-empty">Sem dados suficientes para o gráfico ainda.</p>';
+    var barClass = filterMode === "ncr" ? "mode-ncr" : filterMode === "outros" ? "mode-outros" : "";
+    var w = Math.max(560, monthly.length * 62);
+    var h = 220;
+    var padL = 40, padB = 26, padT = 12, padR = 12;
+    var max = Math.max.apply(null, monthly.map(function (m) { return m.hours; })) || 1;
+    var innerH = h - padT - padB;
+    var innerW = w - padL - padR;
+    var bw = innerW / monthly.length;
+    var gridLines = [0, 0.25, 0.5, 0.75, 1].map(function (f) {
+      var y = padT + innerH - f * innerH;
+      var val = fmtHours(max * f);
+      return '<line class="gridline" x1="' + padL + '" x2="' + (w - padR) + '" y1="' + y + '" y2="' + y + '"></line>' +
+        '<text class="axis-label" x="' + (padL - 8) + '" y="' + (y + 3) + '" text-anchor="end">' + val + '</text>';
+    }).join("");
+    var bars = monthly.map(function (m, i) {
+      var bh = max ? (m.hours / max) * innerH : 0;
+      var x = padL + i * bw + bw * 0.22;
+      var bwReal = bw * 0.56;
+      var y = padT + innerH - bh;
+      return '<rect tabindex="0" class="bar ' + barClass + '" x="' + x.toFixed(1) + '" y="' + y.toFixed(1) + '" width="' + bwReal.toFixed(1) + '" height="' + Math.max(bh, 1.5).toFixed(1) + '" rx="4" ' +
+        'data-month="' + fmtMonthLabel(m.month) + '" data-hours="' + fmtHours(m.hours) + '"></rect>' +
+        '<text class="axis-label" x="' + (x + bwReal / 2).toFixed(1) + '" y="' + (h - padB + 16) + '" text-anchor="middle">' + fmtMonthLabel(m.month) + '</text>';
+    }).join("");
+    return '<svg class="chart-svg" id="chartSvg" viewBox="0 0 ' + w + ' ' + h + '" width="' + w + '" height="' + h + '" role="img" aria-label="Horas trabalhadas por mês">' +
+      gridLines + bars + '</svg>';
+  }
+
+  function renderRanking(ranking, grandTotal) {
+    if (!ranking.length) return '<p class="ranking-empty">Ainda sem tarefas registadas para este filtro.</p>';
+    var max = ranking[0].hours || 1;
+    var fillClass = filterMode === "ncr" ? "mode-ncr" : filterMode === "outros" ? "mode-outros" : "";
+    return '<ol class="ranking-list">' + ranking.slice(0, 12).map(function (r) {
+      var pct = grandTotal ? Math.round((r.hours / grandTotal) * 100) : 0;
+      var width = Math.max((r.hours / max) * 100, 3);
+      return '<li class="ranking-item">' +
+        '<span class="ranking-name">' + escapeHtml(r.task) + '</span>' +
+        '<span class="ranking-value">' + fmtHours(r.hours) + ' h</span>' +
+        '<div class="ranking-track"><div class="ranking-fill ' + fillClass + '" style="width:' + width.toFixed(0) + '%"></div></div>' +
+        '<span class="ranking-meta">' + pct + '% do total' + (filterMode !== "todos" ? " (" + (TYPE_LABEL[filterMode] || filterMode) + ")" : "") + '</span>' +
+        '</li>';
+    }).join("") + '</ol>';
+  }
+
+  function renderFooterHtml() {
+    return '<footer class="app-footer" id="appFooter">' + footerContent() + '</footer>';
+  }
+  function footerContent() {
+    var map = {
+      checking: ['off', 'A carregar…'],
+      synced: ['', 'Gravado em dados.json'],
+      busy: ['busy', 'A guardar…'],
+      error: ['err', 'Falha ao gravar — verifique se a aplicação está a correr']
+    };
+    var m = map[syncStatus] || map.checking;
+    return '<span><span class="sync-dot ' + m[0] + '"></span>' + m[1] + '</span><span>Aceiro</span>';
+  }
+  function renderFooter() {
+    var el = document.getElementById("appFooter");
+    if (el) el.innerHTML = footerContent();
+  }
+
+  /* ---------- events ---------- */
+  function bindEvents() {
+    var pickButtons = document.querySelectorAll("[data-pick-user]");
+    pickButtons.forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        switchUser(btn.dataset.pickUser);
+      });
+    });
+    var onboardConfirm = document.getElementById("onboardUserConfirm");
+    var onboardNameEl = document.getElementById("onboardUserName");
+    if (onboardConfirm) onboardConfirm.addEventListener("click", function () {
+      var name = (onboardNameEl.value || "").trim();
+      if (!name) return;
+      createUser(name);
+    });
+    if (onboardNameEl) onboardNameEl.addEventListener("keydown", function (ev) {
+      if (ev.key === "Enter") {
+        ev.preventDefault();
+        var name = (onboardNameEl.value || "").trim();
+        if (!name) return;
+        createUser(name);
+      }
+    });
+
+    var userSelect = document.getElementById("userSelect");
+    if (userSelect) userSelect.addEventListener("change", function () {
+      switchUser(userSelect.value);
+    });
+    var newUserToggle = document.getElementById("newUserToggle");
+    if (newUserToggle) newUserToggle.addEventListener("click", function () {
+      newUserOpen = !newUserOpen;
+      renderApp();
+      if (newUserOpen) {
+        var el = document.getElementById("newUserName");
+        if (el) el.focus();
+      }
+    });
+    var newUserCancel = document.getElementById("newUserCancel");
+    if (newUserCancel) newUserCancel.addEventListener("click", function () {
+      newUserOpen = false;
+      renderApp();
+    });
+    var newUserConfirm = document.getElementById("newUserConfirm");
+    var newUserNameEl = document.getElementById("newUserName");
+    if (newUserConfirm) newUserConfirm.addEventListener("click", function () {
+      var name = (newUserNameEl.value || "").trim();
+      if (!name) return;
+      createUser(name);
+    });
+    if (newUserNameEl) newUserNameEl.addEventListener("keydown", function (ev) {
+      if (ev.key === "Enter") {
+        ev.preventDefault();
+        var name = (newUserNameEl.value || "").trim();
+        if (!name) return;
+        createUser(name);
+      }
+    });
+
+    var startBtn = document.getElementById("clockStart");
+    var stopBtn = document.getElementById("clockStop");
+    if (startBtn) startBtn.addEventListener("click", startClock);
+    if (stopBtn) stopBtn.addEventListener("click", stopClock);
+
+    var form = document.getElementById("entryForm");
+    if (form) form.addEventListener("submit", function (ev) {
+      ev.preventDefault();
+      var date = document.getElementById("fDate").value || todayISO();
+      var type = document.getElementById("fType").value;
+      var task = document.getElementById("fTask").value.trim();
+      var hours = parseFloat(document.getElementById("fHours").value);
+      if (!task || isNaN(hours) || hours <= 0) return;
+      addEntry({ id: uid(), date: date, type: type, task: task, hours: hours, source: "manual", createdAt: new Date().toISOString() });
+    });
+
+    var logMonth = document.getElementById("logMonth");
+    if (logMonth) logMonth.addEventListener("change", function () {
+      logMonthFilter = logMonth.value;
+      renderApp();
+    });
+
+    var reportMonth = document.getElementById("reportMonth");
+    if (reportMonth) reportMonth.addEventListener("change", function () {
+      reportMonthFilter = reportMonth.value;
+      renderApp();
+    });
+
+    var pickCsv = document.getElementById("pickCsv");
+    var csvFile = document.getElementById("csvFile");
+    if (pickCsv && csvFile) pickCsv.addEventListener("click", function () {
+      csvFile.click();
+    });
+    if (csvFile) csvFile.addEventListener("change", function () {
+      var file = csvFile.files && csvFile.files[0];
+      if (!file) return;
+      var reader = new FileReader();
+      reader.onload = function (ev) {
+        var res = parseCSV(String(ev.target.result || ""));
+        if (!res.ok) {
+          importMessage = { text: res.error, ok: false };
+          renderApp();
+          return;
+        }
+        STATE.entries = STATE.entries.concat(res.entries);
+        importMessage = { text: "Importadas " + res.entries.length + " linhas de " + file.name + (res.skipped ? " (" + res.skipped + " ignoradas)" : "") + ".", ok: true };
+        persist();
+      };
+      reader.onerror = function () {
+        importMessage = { text: "Não consegui ler o ficheiro.", ok: false };
+        renderApp();
+      };
+      reader.readAsText(file, "utf-8");
+      csvFile.value = "";
+    });
+    var exportBtn = document.getElementById("exportCsv");
+    if (exportBtn) exportBtn.addEventListener("click", exportCSV);
+
+    bindDaytypeRow();
+    var fDateEl = document.getElementById("fDate");
+    if (fDateEl) fDateEl.addEventListener("change", function () {
+      var row = document.getElementById("daytypeRow");
+      if (!row) return;
+      row.outerHTML = renderDayTypeRow(fDateEl.value || todayISO());
+      bindDaytypeRow();
+    });
+
+    var table = document.querySelector(".log-card table");
+    if (table) table.addEventListener("click", function (ev) {
+      var btn = ev.target.closest("[data-action]");
+      if (!btn) return;
+      if (btn.dataset.action === "delete") removeEntry(btn.dataset.id);
+    });
+
+    var toggle = document.getElementById("filterToggle");
+    if (toggle) toggle.addEventListener("click", function (ev) {
+      var btn = ev.target.closest("button[data-mode]");
+      if (!btn) return;
+      filterMode = btn.dataset.mode;
+      renderApp();
+    });
+
+    bindChartTooltip();
+  }
+
+  function bindDaytypeRow() {
+    var row = document.getElementById("daytypeRow");
+    if (!row) return;
+    var date = row.dataset.date;
+    row.querySelectorAll("[data-daytype]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        if (!STATE.settings.dayTypeOverrides) STATE.settings.dayTypeOverrides = {};
+        STATE.settings.dayTypeOverrides[date] = btn.dataset.daytype;
+        persist();
+      });
+    });
+    var resetBtn = document.getElementById("daytypeReset");
+    if (resetBtn) resetBtn.addEventListener("click", function () {
+      if (STATE.settings.dayTypeOverrides) delete STATE.settings.dayTypeOverrides[date];
+      persist();
+    });
+  }
+
+  function bindChartTooltip() {
+    var svg = document.getElementById("chartSvg");
+    var tip = document.getElementById("chartTooltip");
+    if (!svg || !tip) return;
+    svg.querySelectorAll(".bar").forEach(function (bar) {
+      bar.addEventListener("mousemove", function (ev) {
+        tip.textContent = bar.dataset.month + " · " + bar.dataset.hours + " h";
+        tip.style.left = ev.clientX + "px";
+        tip.style.top = ev.clientY + "px";
+        tip.classList.add("show");
+      });
+      bar.addEventListener("mouseleave", function () { tip.classList.remove("show"); });
+      bar.addEventListener("focus", function () {
+        tip.textContent = bar.dataset.month + " · " + bar.dataset.hours + " h";
+        var r = bar.getBoundingClientRect();
+        tip.style.left = (r.left + r.width / 2) + "px";
+        tip.style.top = r.top + "px";
+        tip.classList.add("show");
+      });
+      bar.addEventListener("blur", function () { tip.classList.remove("show"); });
+    });
+  }
+
+  boot();
+})();
+</script>
+</body>
+</html>
